@@ -1,0 +1,62 @@
+[2026-02-11T07:26:28.864Z] [INFO] Login Register MCP Server 已启动
+[2026-02-11T07:26:28.987Z] [INFO] ListToolsRequestSchema request
+{
+  "method": "tools/list",
+  "params": {}
+}
+[2026-02-11T07:26:40.646Z] [INFO] CallToolRequestSchema request
+{
+  "name": "get_login_token",
+  "args": {
+    "username": "todd.wang"
+  }
+}
+[2026-02-11T07:26:40.652Z] [INFO] get_login_token success
+{
+  "username": "todd.wang",
+  "result": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3MzI2YmZiYy1iYmRjLTQ4MWQtYThiNi1iNDhkMDU0YTFlYjYiLCJ1c2VybmFtZSI6InRvZGQud2FuZyIsImlhdCI6MTc3MDc5NDgwMCwiZXhwIjoxNzcxMzk5NjAwfQ.XnapAqlIVKUvXbIm6bZcs_CvUeeuWNVQsCzcBf-UPhY",
+    "userId": "7326bfbc-bbdc-481d-a8b6-b48d054a1eb6",
+    "username": "todd.wang",
+    "isNewUser": false,
+    "message": "用户已存在，返回token"
+  }
+}
+[2026-02-11T07:33:12.124Z] [INFO] Login Register MCP Server 已启动
+[2026-02-11T07:33:12.155Z] [INFO] CallToolRequestSchema request
+{
+  "name": "get_login_token",
+  "args": {
+    "username": "todd.wang"
+  }
+}
+[2026-02-11T07:33:12.159Z] [INFO] get_login_token success
+{
+  "username": "todd.wang",
+  "result": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3MzI2YmZiYy1iYmRjLTQ4MWQtYThiNi1iNDhkMDU0YTFlYjYiLCJ1c2VybmFtZSI6InRvZGQud2FuZyIsImlhdCI6MTc3MDc5NTE5MiwiZXhwIjoxNzcxMzk5OTkyfQ.8iQ8K77PGzHd6hnjdVfo9EhHED1ponKW0TjLzra_oN4",
+    "userId": "7326bfbc-bbdc-481d-a8b6-b48d054a1eb6",
+    "username": "todd.wang",
+    "isNewUser": false,
+    "message": "用户已存在，返回token"
+  }
+}
+[2026-02-11T07:34:48.213Z] [INFO] Login Register MCP Server 已启动
+[2026-02-11T07:34:48.239Z] [INFO] CallToolRequestSchema request
+{
+  "name": "get_login_token",
+  "args": {
+    "username": "hrtps-test"
+  }
+}
+[2026-02-11T07:34:48.244Z] [INFO] get_login_token success
+{
+  "username": "hrtps-test",
+  "result": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0ZWJmYWY0MC04MTA5LTQ2YzMtYjEyYy1jNTQ1ZmQ3NWM3NDIiLCJ1c2VybmFtZSI6ImhydHBzLXRlc3QiLCJpYXQiOjE3NzA3OTUyODgsImV4cCI6MTc3MTQwMDA4OH0.Z31Z6-v6I2Qq4Q98M7b7IcT-VJ-1DWy5lXN_zThRyu4",
+    "userId": "4ebfaf40-8109-46c3-b12c-c545fd75c742",
+    "username": "hrtps-test",
+    "isNewUser": true,
+    "message": "新用户已创建并返回token"
+  }
+}

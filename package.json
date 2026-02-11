@@ -1,0 +1,15 @@
+{
+  "name": "login-register-mcp",
+  "version": "1.0.0",
+  "description": "MCP服务 - 通过用户名获取登录token",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "users": [
+    {
+      "id": "b1276329-6463-46c0-8b48-40aa6bd725cc",
+      "username": "zhangsan",
+      "createdAt": "2026-02-11T06:19:06.813Z"
+    },
+    {
+      "id": "7326bfbc-bbdc-481d-a8b6-b48d054a1eb6",
+      "username": "todd.wang",
+      "createdAt": "2026-02-11T06:23:45.830Z"
+    },
+    {
+      "id": "bc00eadc-eba4-4495-b391-01ff17a6bbfb",
+      "username": "yiersan.wang",
+      "createdAt": "2026-02-11T07:13:58.882Z"
+    },
+    {
+      "id": "4831486a-b26a-4781-8e35-eb3311f993e0",
+      "username": "yiersan.eewang",
+      "createdAt": "2026-02-11T07:15:31.829Z"
+    },
+    {
+      "id": "9d428b18-5f11-472c-91e6-47fd68976936",
+      "username": "todd.呃呃呃呃wang",
+      "createdAt": "2026-02-11T07:21:47.244Z"
+    },
+    {
+      "id": "8d380dd3-fb68-44a6-b338-15470915d6a1",
+      "username": "diaozhatian",
+      "createdAt": "2026-02-11T07:23:17.004Z"
+    },
+    {
+      "id": "4ebfaf40-8109-46c3-b12c-c545fd75c742",
+      "username": "hrtps-test",
+      "createdAt": "2026-02-11T07:34:48.240Z"
+    }
+  ]
+}
