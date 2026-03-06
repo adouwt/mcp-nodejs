@@ -1,15 +1,49 @@
 {
   "name": "login-register-mcp",
   "version": "1.0.0",
-  "description": "MCP服务 - 通过用户名获取登录token",
+  "description": "MCP服务 - 通过用户名、密码和产品名称获取登录token，支持token校验",
   "main": "src/index.js",
   "type": "module",
-  "scripts": {
-    "start": "node src/index.js"
+  "bin": {
+    "login-register-mcp": "src/index.js"
   },
+  "exports": {
+    ".": "./src/index.js",
+    "./client": "./lib/client.js",
+    "./service": "./src/userService.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node test.js",
+    "init-db": "node scripts/init-db.js",
+    "prepublishOnly": "npm test",
+    "version": "npm test",
+    "postversion": "git push && git push --tags"
+  },
+  "keywords": ["mcp", "login", "register", "token", "jwt", "authentication"],
+  "author": "hrtps.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hrtps/login-register-mcp.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry-npm.hrtps.com/"
+  },
+  "files": [
+    "src/",
+    "lib/",
+    "data/",
+    "README.md",
+    "package.json"
+  ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "mysql2": "^3.6.5"
+  },
+  "peerDependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
   }
 }

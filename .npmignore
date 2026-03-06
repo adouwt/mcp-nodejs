@@ -1,0 +1,21 @@
+# 开发文件
+test.js
+examples/
+log/
+.git/
+.gitignore
+
+# 临时文件
+*.log
+*.tmp
+node_modules/
+
+# IDE 文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db

@@ -29,6 +29,61 @@
       "id": "8d380dd3-fb68-44a6-b338-15470915d6a1",
       "username": "diaozhatian",
       "createdAt": "2026-02-11T07:23:17.004Z"
+    },
+    {
+      "id": "4b1e7081-2201-43e8-ba98-621e31f18709",
+      "username": "newuser",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "createdAt": "2026-03-06T09:44:36.558Z"
+    },
+    {
+      "id": "cd6c1d8f-e1fa-4901-a3e8-fd7dc2e27528",
+      "username": "zhangsan",
+      "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "product": "app1",
+      "createdAt": "2026-03-06T09:48:56.581Z"
+    },
+    {
+      "id": "4bff214a-92be-40c4-8a6b-270dc55a7fff",
+      "username": "zhangsan",
+      "password": "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5",
+      "product": "app2",
+      "createdAt": "2026-03-06T09:49:03.066Z"
+    },
+    {
+      "id": "51e65a1f-49d2-49d4-8012-b4f599d59f0d",
+      "username": "testuser",
+      "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+      "product": "myapp",
+      "createdAt": "2026-03-06T09:56:24.087Z"
+    },
+    {
+      "id": "e41f2415-cd64-4b64-90a4-a5da300895f2",
+      "username": "user2",
+      "password": "1d4598d1949b47f7f211134b639ec32238ce73086a83c2f745713b3f12f817e5",
+      "product": "myapp",
+      "createdAt": "2026-03-06T09:56:25.230Z"
+    },
+    {
+      "id": "582e1ef7-cd3a-43a8-b6ea-31c7cda9ccb1",
+      "username": "admin",
+      "password": "fcf730b6d95236ecd3c9fc2d92d7b6b2bb061514961aec041d6c7a7192f592e4",
+      "product": "app1",
+      "createdAt": "2026-03-06T09:56:25.816Z"
+    },
+    {
+      "id": "89df5242-d180-449a-adca-df3adee1212f",
+      "username": "admin",
+      "password": "89927b1c20a6897fb33335e944e24d08b58ff54d705d69517c5743af23006ffd",
+      "product": "app2",
+      "createdAt": "2026-03-06T09:56:26.434Z"
+    },
+    {
+      "id": "035f9367-6f0a-4659-93e6-7b77cc90a608",
+      "username": "testuser",
+      "password": "13d249f2cb4127b40cfa757866850278793f814ded3c587fe5889e889a7a9f6c",
+      "product": "testapp",
+      "createdAt": "2026-03-06T10:44:20.538Z"
     }
   ]
 }

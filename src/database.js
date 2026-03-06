@@ -1,0 +1,142 @@
+import mysql from 'mysql2/promise';
+import { logger } from './logger.js';
+
+class Database {
+  constructor() {
+    this.connection = null;
+    this.config = {
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT) || 3306,
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASSWORD || '123456',
+      charset: 'utf8mb4',
+      timezone: '+00:00',
+      connectTimeout: 60000,
+      acquireTimeout: 60000,
+      multipleStatements: true
+    };
+  }
+
+  async connect() {
+    try {
+      if (this.connection) {
+        return this.connection;
+      }
+
+      this.connection = await mysql.createConnection(this.config);
+      logger.info('数据库连接成功', { host: this.config.host, database: this.config.database });
+      
+      // 测试连接
+      await this.connection.ping();
+      
+      return this.connection;
+    } catch (error) {
+      logger.error('数据库连接失败', { error: error.message, config: this.config });
+      throw new Error(`数据库连接失败: ${error.message}`);
+    }
+  }
+
+  async disconnect() {
+    if (this.connection) {
+      try {
+        await this.connection.end();
+        this.connection = null;
+        logger.info('数据库连接已关闭');
+      } catch (error) {
+        logger.error('关闭数据库连接失败', { error: error.message });
+      }
+    }
+  }
+
+  async query(sql, params = []) {
+    try {
+      const connection = await this.connect();
+      const [rows] = await connection.execute(sql, params);
+      return rows;
+    } catch (error) {
+      logger.error('数据库查询失败', { sql, params, error: error.message });
+      throw error;
+    }
+  }
+
+  async transaction(callback) {
+    const connection = await this.connect();
+    await connection.beginTransaction();
+    
+    try {
+      const result = await callback(connection);
+      await connection.commit();
+      return result;
+    } catch (error) {
+      await connection.rollback();
+      logger.error('事务回滚', { error: error.message });
+      throw error;
+    }
+  }
+
+  // 初始化数据库表结构
+  async initDatabase() {
+    try {
+      // 检查数据库是否存在，不存在则创建
+      await this.query(`CREATE DATABASE IF NOT EXISTS \`${this.config.database}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);
+      
+      // 使用数据库
+      await this.query(`USE \`${this.config.database}\``);
+      
+      // 创建用户表
+      const createUsersTable = `
+        CREATE TABLE IF NOT EXISTS \`users\` (
+          \`id\` VARCHAR(36) NOT NULL PRIMARY KEY COMMENT '用户唯一标识符 (UUID)',
+          \`username\` VARCHAR(100) NOT NULL COMMENT '用户名',
+          \`password\` VARCHAR(64) NOT NULL COMMENT 'SHA256加密后的密码',
+          \`product\` VARCHAR(100) NOT NULL COMMENT '产品/业务名称',
+          \`created_at\` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+          \`updated_at\` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+          \`status\` TINYINT(1) DEFAULT 1 COMMENT '用户状态: 1-正常, 0-禁用',
+          
+          UNIQUE KEY \`uk_username_product\` (\`username\`, \`product\`),
+          KEY \`idx_username\` (\`username\`),
+          KEY \`idx_product\` (\`product\`),
+          KEY \`idx_created_at\` (\`created_at\`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表'
+      `;
+      
+      await this.query(createUsersTable);
+      
+      // 创建登录日志表
+      const createLoginLogsTable = `
+        CREATE TABLE IF NOT EXISTS \`login_logs\` (
+          \`id\` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '日志ID',
+          \`user_id\` VARCHAR(36) NOT NULL COMMENT '用户ID',
+          \`username\` VARCHAR(100) NOT NULL COMMENT '用户名',
+          \`product\` VARCHAR(100) NOT NULL COMMENT '产品名称',
+          \`action\` VARCHAR(20) NOT NULL COMMENT '操作类型: login, register, verify',
+          \`ip_address\` VARCHAR(45) DEFAULT NULL COMMENT 'IP地址',
+          \`user_agent\` TEXT DEFAULT NULL COMMENT '用户代理',
+          \`success\` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否成功: 1-成功, 0-失败',
+          \`error_message\` TEXT DEFAULT NULL COMMENT '错误信息',
+          \`created_at\` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+          
+          KEY \`idx_user_id\` (\`user_id\`),
+          KEY \`idx_username_product\` (\`username\`, \`product\`),
+          KEY \`idx_action\` (\`action\`),
+          KEY \`idx_created_at\` (\`created_at\`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='登录日志表'
+      `;
+      
+      await this.query(createLoginLogsTable);
+      
+      logger.info('数据库表结构初始化完成');
+      
+    } catch (error) {
+      logger.error('数据库初始化失败', { error: error.message });
+      throw error;
+    }
+  }
+}
+
+// 创建单例实例
+const database = new Database();
+
+export { database };
+export default database;
