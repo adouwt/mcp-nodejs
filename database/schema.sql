@@ -1,7 +1,7 @@
 -- 创建数据库
-CREATE DATABASE IF NOT EXISTS `login_register_mcp` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS `db_login_register_mcp` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-USE `login_register_mcp`;
+USE `db_login_register_mcp`;
 
 -- 用户表
 CREATE TABLE `users` (
@@ -22,28 +22,51 @@ CREATE TABLE `users` (
   KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
 
--- 登录日志表（可选，用于记录登录历史）
+-- Token管理表
+CREATE TABLE `user_tokens` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT 'Token记录ID',
+  `user_id` VARCHAR(36) NOT NULL COMMENT '用户ID',
+  `username` VARCHAR(100) NOT NULL COMMENT '用户名',
+  `product` VARCHAR(100) NOT NULL COMMENT '产品名称',
+  `token_hash` VARCHAR(64) NOT NULL COMMENT 'Token的SHA256哈希值',
+  `jwt_token` TEXT NOT NULL COMMENT '完整的JWT Token',
+  `expires_at` TIMESTAMP NOT NULL COMMENT 'Token过期时间',
+  `is_active` TINYINT(1) DEFAULT 1 COMMENT 'Token状态: 1-有效, 0-已撤销',
+  `client_info` JSON DEFAULT NULL COMMENT '客户端信息(IP、User-Agent等)',
+  `last_used_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '最后使用时间',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `revoked_at` TIMESTAMP NULL DEFAULT NULL COMMENT '撤销时间',
+  `revoke_reason` VARCHAR(100) DEFAULT NULL COMMENT '撤销原因',
+  
+  -- 索引
+  UNIQUE KEY `uk_token_hash` (`token_hash`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_username_product` (`username`, `product`),
+  KEY `idx_expires_at` (`expires_at`),
+  KEY `idx_is_active` (`is_active`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户Token管理表';
+
+-- 登录日志表
 CREATE TABLE `login_logs` (
   `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '日志ID',
   `user_id` VARCHAR(36) NOT NULL COMMENT '用户ID',
   `username` VARCHAR(100) NOT NULL COMMENT '用户名',
   `product` VARCHAR(100) NOT NULL COMMENT '产品名称',
-  `action` VARCHAR(20) NOT NULL COMMENT '操作类型: login, register, verify',
-  `ip_address` VARCHAR(45) DEFAULT NULL COMMENT 'IP地址',
-  `user_agent` TEXT DEFAULT NULL COMMENT '用户代理',
+  `action` VARCHAR(20) NOT NULL COMMENT '操作类型: login, register, verify, logout, revoke',
   `success` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否成功: 1-成功, 0-失败',
   `error_message` TEXT DEFAULT NULL COMMENT '错误信息',
+  `token_id` BIGINT DEFAULT NULL COMMENT '关联的Token ID',
+  `client_info` JSON DEFAULT NULL COMMENT '客户端信息',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   
   -- 索引
   KEY `idx_user_id` (`user_id`),
   KEY `idx_username_product` (`username`, `product`),
   KEY `idx_action` (`action`),
-  KEY `idx_created_at` (`created_at`),
-  
-  -- 外键约束
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='登录日志表';
+  KEY `idx_token_id` (`token_id`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户操作日志表';
 
 -- 插入测试数据（基于现有 JSON 数据）
 INSERT INTO `users` (`id`, `username`, `password`, `product`, `created_at`) VALUES

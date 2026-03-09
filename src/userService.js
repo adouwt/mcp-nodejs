@@ -1,10 +1,15 @@
-import jwt from 'jsonwebtoken';
-import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 import { database } from './database.js';
 import { logger } from './logger.js';
+import { createToken, verifyToken as verifyTokenFromService } from './tokenService.js';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'mcp-login-register-secret-key';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, '..', '.env') });
 const TOKEN_EXPIRES_IN = '7d';
 
 // 初始化数据库
@@ -69,13 +74,13 @@ async function createUser(username, password, product) {
   }
 }
 
-async function logUserAction(userId, username, product, action, success, errorMessage = null) {
+async function logUserAction(userId, username, product, action, success, errorMessage = null, tokenId = null) {
   try {
     const sql = `
-      INSERT INTO login_logs (user_id, username, product, action, success, error_message) 
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO login_logs (user_id, username, product, action, success, error_message, token_id, created_at) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
     `;
-    await database.query(sql, [userId, username, product, action, success ? 1 : 0, errorMessage]);
+    await database.query(sql, [userId, username, product, action, success ? 1 : 0, errorMessage, tokenId]);
   } catch (error) {
     logger.error('记录用户操作日志失败', { error: error.message });
   }
@@ -85,16 +90,11 @@ function verifyPassword(user, password) {
   return user.password === hashPassword(password);
 }
 
+// 这个函数已被tokenService.js中的createToken替代
+// 保留用于向后兼容，但建议使用createToken
 function generateToken(user) {
-  return jwt.sign(
-    {
-      userId: user.id,
-      username: user.username,
-      product: user.product
-    },
-    JWT_SECRET,
-    { expiresIn: TOKEN_EXPIRES_IN }
-  );
+  // 此函数已废弃，请使用 tokenService.createToken
+  throw new Error('generateToken已废弃，请使用tokenService.createToken');
 }
 
 export async function getTokenByUsername(username, password, product) {
@@ -128,18 +128,21 @@ export async function getTokenByUsername(username, password, product) {
         await logUserAction(user.id, user.username, user.product, 'login', false, '密码错误');
         throw new Error('密码错误');
       }
-      
-      // 记录登录成功日志
-      await logUserAction(user.id, user.username, user.product, 'login', true);
     }
 
-    const token = generateToken(user);
+    // 使用新的token服务创建token
+    const tokenResult = await createToken(user);
+
+    // 记录操作日志
+    await logUserAction(user.id, user.username, user.product, isNewUser ? 'register' : 'login', true, null, tokenResult.tokenId);
 
     return {
-      token,
+      token: tokenResult.token,
+      tokenId: tokenResult.tokenId,
       userId: user.id,
       username: user.username,
       product: user.product,
+      expiresAt: tokenResult.expiresAt,
       isNewUser,
       message: isNewUser ? '新用户已创建并返回token' : '登录成功，返回token'
     };
@@ -150,57 +153,36 @@ export async function getTokenByUsername(username, password, product) {
 }
 
 export async function verifyToken(token) {
-  if (!token || typeof token !== 'string' || token.trim() === '') {
-    return {
-      valid: false,
-      error: 'token不能为空'
-    };
-  }
-
+  // 确保数据库已初始化
+  await initDatabase();
+  
   try {
-    const decoded = jwt.verify(token.trim(), JWT_SECRET);
-    const user = await findUser(decoded.username, decoded.product);
-
-    if (!user) {
-      // 记录验证失败日志
-      await logUserAction(decoded.userId, decoded.username, decoded.product, 'verify', false, '用户不存在');
-      return {
-        valid: false,
-        error: '用户不存在'
-      };
-    }
-
-    // 记录验证成功日志
-    await logUserAction(user.id, user.username, user.product, 'verify', true);
-
-    return {
-      valid: true,
-      userId: user.id,
-      username: user.username,
-      product: user.product,
-      createdAt: user.created_at,
-      tokenExp: new Date(decoded.exp * 1000).toISOString(),
-      tokenIat: new Date(decoded.iat * 1000).toISOString()
-    };
-  } catch (error) {
-    let errorMessage = 'token无效';
-    if (error.name === 'TokenExpiredError') {
-      errorMessage = 'token已过期';
+    // 使用新的token验证服务
+    const result = await verifyTokenFromService(token);
+    
+    // 记录验证日志
+    if (result.valid) {
+      await logUserAction(result.userId, result.username, result.product, 'verify', true, null, result.tokenId);
+    } else {
+      // 尝试从JWT中获取用户信息用于日志记录
+      try {
+        const jwt = await import('jsonwebtoken');
+        const decoded = jwt.decode(token);
+        if (decoded && decoded.userId && decoded.username && decoded.product) {
+          await logUserAction(decoded.userId, decoded.username, decoded.product, 'verify', false, result.error);
+        }
+      } catch (decodeError) {
+        // 忽略解码错误
+      }
     }
     
-    // 尝试记录验证失败日志（如果能解析出用户信息）
-    try {
-      const decoded = jwt.decode(token.trim());
-      if (decoded && decoded.username && decoded.product) {
-        await logUserAction(decoded.userId, decoded.username, decoded.product, 'verify', false, errorMessage);
-      }
-    } catch (decodeError) {
-      // 忽略解码错误
-    }
-
+    return result;
+    
+  } catch (error) {
+    logger.error('Token验证失败', { error: error.message });
     return {
       valid: false,
-      error: errorMessage
+      error: 'token验证失败'
     };
   }
 }

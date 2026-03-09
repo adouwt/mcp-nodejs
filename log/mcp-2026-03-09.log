@@ -1,0 +1,90 @@
+[2026-03-09T07:02:10.743Z] [INFO] CallToolRequestSchema request
+{
+  "name": "get_login_token",
+  "args": {
+    "password": "***",
+    "product": "clean-test-server",
+    "username": "clean.test@hrtps.com"
+  }
+}
+[2026-03-09T07:02:10.791Z] [INFO] 数据库表结构初始化完成
+[2026-03-09T07:02:10.803Z] [INFO] Token创建成功
+{
+  "tokenId": 9,
+  "userId": "43dc6cb2-1749-438f-94d0-ca9dbd7cc1d3",
+  "username": "clean.test@hrtps.com",
+  "product": "clean-test-server",
+  "expiresAt": "2026-03-16T07:02:10.000Z"
+}
+[2026-03-09T07:02:10.806Z] [INFO] get_login_token success
+{
+  "username": "clean.test@hrtps.com",
+  "product": "clean-test-server",
+  "isNewUser": true
+}
+[2026-03-09T07:02:15.894Z] [INFO] CallToolRequestSchema request
+{
+  "name": "verify_token",
+  "args": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0M2RjNmNiMi0xNzQ5LTQzOGYtOTRkMC1jYTlkYmQ3Y2MxZDMiLCJ1c2VybmFtZSI6ImNsZWFuLnRlc3RAaHJ0cHMuY29tIiwicHJvZHVjdCI6ImNsZWFuLXRlc3Qtc2VydmVyIiwiaWF0IjoxNzczMDM5NzMwLCJleHAiOjE3NzM2NDQ1MzB9.pHgoya0kvwmn-YAbo_s6JTLK2mBkpiVycRrLU0lqR8Y"
+  }
+}
+[2026-03-09T07:02:15.917Z] [INFO] 数据库表结构初始化完成
+[2026-03-09T07:02:15.936Z] [INFO] verify_token result
+{
+  "valid": true,
+  "username": "clean.test@hrtps.com",
+  "product": "clean-test-server"
+}
+[2026-03-09T07:04:03.741Z] [INFO] CallToolRequestSchema request
+{
+  "name": "get_login_token",
+  "args": {
+    "password": "***",
+    "product": "1.test-mcp-server",
+    "username": "4.todd.wang@hrtps"
+  }
+}
+[2026-03-09T07:04:03.768Z] [INFO] 数据库表结构初始化完成
+[2026-03-09T07:04:03.793Z] [INFO] Token创建成功
+{
+  "tokenId": 10,
+  "userId": "c77eb5dc-dae9-4373-bc88-ec1425bdb48b",
+  "username": "4.todd.wang@hrtps",
+  "product": "1.test-mcp-server",
+  "expiresAt": "2026-03-16T07:04:03.000Z"
+}
+[2026-03-09T07:04:03.794Z] [INFO] get_login_token success
+{
+  "username": "4.todd.wang@hrtps",
+  "product": "1.test-mcp-server",
+  "isNewUser": true
+}
+[2026-03-09T07:04:15.676Z] [INFO] CallToolRequestSchema request
+{
+  "name": "verify_token",
+  "args": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjNzdlYjVkYy1kYWU5LTQzNzMtYmM4OC1lYzE0MjViZGI0OGIiLCJ1c2VybmFtZSI6IjQudG9kZC53YW5nQGhydHBzIiwicHJvZHVjdCI6IjEudGVzdC1tY3Atc2VydmVyIiwiaWF0IjoxNzczMDM5ODQzLCJleHAiOjE3NzM2NDQ2NDN9.ot13IaWhKzpRzGpo1ZHhDU62auzqyiC-xHojz75JuQ0"
+  }
+}
+[2026-03-09T07:04:15.697Z] [INFO] 数据库表结构初始化完成
+[2026-03-09T07:04:15.704Z] [INFO] verify_token result
+{
+  "valid": true,
+  "username": "4.todd.wang@hrtps",
+  "product": "1.test-mcp-server"
+}
+[2026-03-09T07:05:43.550Z] [INFO] CallToolRequestSchema request
+{
+  "name": "verify_token",
+  "args": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjNzdlYjVkYy1kYWU5LTQzNzMtYmM4OC1lYzE0MjViZGI0OGIiLCJ1c2VybmFtZSI6IjQudG9kZC53YW5nQGhydHBzIiwicHJvZHVjdCI6IjEudGVzdC1tY3Atc2VydmVyIiwiaWF0IjoxNzczMDM5ODQzLCJleHAiOjE3NzM2NDQ2NDN9.ot13IaWhKzpRzGpo1ZHhDU62auzqyiC-xHojz75JuQ0"
+  }
+}
+[2026-03-09T07:05:43.559Z] [INFO] 数据库表结构初始化完成
+[2026-03-09T07:05:43.565Z] [INFO] verify_token result
+{
+  "valid": true,
+  "username": "4.todd.wang@hrtps",
+  "product": "1.test-mcp-server"
+}

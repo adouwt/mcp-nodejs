@@ -20,7 +20,14 @@
     "version": "npm test",
     "postversion": "git push && git push --tags"
   },
-  "keywords": ["mcp", "login", "register", "token", "jwt", "authentication"],
+  "keywords": [
+    "mcp",
+    "login",
+    "register",
+    "token",
+    "jwt",
+    "authentication"
+  ],
   "author": "hrtps.com",
   "license": "MIT",
   "repository": {
@@ -33,15 +40,20 @@
   "files": [
     "src/",
     "lib/",
-    "data/",
+    "scripts/",
+    "database/",
+    "docs/",
+    "examples/",
+    ".env.example",
     "README.md",
     "package.json"
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^17.3.1",
     "jsonwebtoken": "^9.0.2",
-    "uuid": "^9.0.1",
-    "mysql2": "^3.6.5"
+    "mysql2": "^3.6.5",
+    "uuid": "^9.0.1"
   },
   "peerDependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0"
