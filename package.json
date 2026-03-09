@@ -14,6 +14,7 @@
   },
   "scripts": {
     "start": "node src/index.js",
+    "start:http": "node src/http-transport.js",
     "test": "node test.js",
     "init-db": "node scripts/init-db.js",
     "prepublishOnly": "npm test",
@@ -51,6 +52,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "dotenv": "^17.3.1",
+    "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.6.5",
     "uuid": "^9.0.1"
